@@ -13,7 +13,7 @@ jdbc:postgresql://localhost:5432/library_db
 подключены стартеры:
 Spring Web, Spring Data JPA, Postgresql Driver , Thymeleaf, Validation
 
-Проект запускается через ТомКат 11 http://localhost:8080/library
+Проект запускается через ТомКат 11 http://localhost:8080
 
 Главная страница
 --http://localhost:8080/people
