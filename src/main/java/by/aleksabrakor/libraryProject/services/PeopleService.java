@@ -74,19 +74,6 @@ public class PeopleService {
                 .filter(book -> book.getTakenAt().plusDays(10).isBefore(LocalDateTime.now()))
                 .forEach(book -> book.setExpired(true));
 
-//        Другие варианты записи:
-
-//        booksByOwner.forEach(book -> {
-//            if (book.getTakenAt().plusDays(10).isBefore(LocalDateTime.now())) {
-//                book.setExpired(true);
-//            }
-//        });
-
-//        for (Book book : booksByOwner) {
-//            if (book.getTakenAt().plusDays(10).isBefore(LocalDateTime.now())) {
-//                book.setExpired(true);
-//            }
-//        }
     }
 
 }

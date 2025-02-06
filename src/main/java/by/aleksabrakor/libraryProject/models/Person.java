@@ -2,11 +2,15 @@ package by.aleksabrakor.libraryProject.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Table(name="person")
+@Data
+@NoArgsConstructor
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,46 +32,12 @@ public class Person {
     @OneToMany(mappedBy = "owner")
     private List<Book> books;
 
-    public Person(String fio, int age) {
+
+    public Person(int id, String fio, int yearOfBirth) {
+        this.id = id;
         this.fio = fio;
-        this.yearOfBirth = age;
-    }
-
-    public Person() {
-    }
-
-    public String getFio() {
-        return fio;
-    }
-
-    public void setFio(String fio) {
-        this.fio = fio;
-    }
-
-    public int getYearOfBirth() {
-        return yearOfBirth;
-    }
-
-    public void setYearOfBirth(int yearOfBirth) {
         this.yearOfBirth = yearOfBirth;
     }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public List<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(List<Book> books) {
-        this.books = books;
-    }
-
 
     @Override
     public String toString() {
@@ -78,4 +48,6 @@ public class Person {
                 ", books=" + books +
                 '}';
     }
+
+
 }

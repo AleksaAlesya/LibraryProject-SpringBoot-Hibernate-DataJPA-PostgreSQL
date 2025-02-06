@@ -3,6 +3,7 @@ package by.aleksabrakor.libraryProject.dao;
 import by.aleksabrakor.libraryProject.models.Book;
 import by.aleksabrakor.libraryProject.models.Person;
 import jakarta.persistence.EntityManager;
+import lombok.Data;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
