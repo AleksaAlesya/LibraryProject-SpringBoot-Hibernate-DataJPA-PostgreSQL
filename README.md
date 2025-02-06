@@ -9,11 +9,11 @@ password - postgres,
 jdbc:postgresql://localhost:5432/library_db
 
 Используемые технолоигии, фреймворки, библиотеки:
-сборка Maven Java 17, Spring Boot
+сборка Maven Java 17, Spring Boot, lombok
 подключены стартеры:
 Spring Web, Spring Data JPA, Postgresql Driver , Thymeleaf, Validation
 
-Проект запускается через ТомКат 11 http://localhost:8080/library
+Проект запускается через ТомКат 11 http://localhost:8080
 
 Главная страница
 --http://localhost:8080/people

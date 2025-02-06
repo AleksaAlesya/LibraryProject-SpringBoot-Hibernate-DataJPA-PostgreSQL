@@ -65,11 +65,6 @@ public class BooksService {
         booksRepository.deleteById(id);
     }
 
-    //    получение владельца книги по id книги реализован в PeopleService
-    public Person getBookOwner(int id) {
-        return booksRepository.findById(id).map(Book::getOwner).orElse(null);
-    }
-
     @Transactional
     public void assignBook(Person person, int bookId) {
         booksRepository.findById(bookId).ifPresent(book -> {
