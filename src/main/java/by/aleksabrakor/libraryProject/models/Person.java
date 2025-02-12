@@ -32,6 +32,13 @@ public class Person {
     @OneToMany(mappedBy = "owner")
     private List<Book> books;
 
+
+    public Person(int id, String fio, int yearOfBirth) {
+        this.id = id;
+        this.fio = fio;
+        this.yearOfBirth = yearOfBirth;
+    }
+
     @Override
     public String toString() {
         return "Person{" +

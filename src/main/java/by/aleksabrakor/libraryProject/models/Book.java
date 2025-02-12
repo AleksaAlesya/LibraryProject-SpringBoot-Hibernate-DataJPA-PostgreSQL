@@ -44,6 +44,11 @@ public class Book {
     @Transient
     private boolean expired; //Hibernate это поле не будет видеть. Показывает просроченность возврата книги
 
+    public Book(int id, String title, int year) {
+        this.id = id;
+        this.title = title;
+        this.year = year;
+    }
 
     @Override
     public String toString() {
