@@ -53,7 +53,7 @@ public class EmailNotificationService {
     private String createEmailMessage(String userName, List<Book> expiredBooks) {
         StringBuilder text = new StringBuilder();
         text.append("Уважаемый(ая) ").append(userName).append(",\n\n");
-        text.append("У вас есть просроченные книги:\n");
+        text.append("У вас есть не возвращенные в 30 дневный срок книги:\n");
 
         for (Book book : expiredBooks) {
             text.append("- ").append(book.getTitle()).append(" (взята: ")
@@ -65,7 +65,7 @@ public class EmailNotificationService {
     }
 
   /*  Уважаемый(ая) Иван Иванов,
-    У вас есть просроченные книги:
+    У вас есть не возвращенные в 30 дневный срок книги:
     - Война и мир (взята: 2023-10-01)
     - Преступление и наказание (взята: 2023-10-05)
 

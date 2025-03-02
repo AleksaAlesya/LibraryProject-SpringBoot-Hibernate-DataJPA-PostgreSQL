@@ -18,6 +18,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class PeopleService {
     private final PeopleRepository peopleRepository;
+    private static final int DAYS_TO_RETURN_BOOK = 30;
 
     @Autowired
     public PeopleService(PeopleRepository peopleRepository) {
@@ -72,7 +73,7 @@ public class PeopleService {
 
     private void checkForExpired(List<Book> booksByOwner) {
         booksByOwner.stream()
-                .filter(book -> book.getTakenAt().plusDays(10).isBefore(LocalDateTime.now()))
+                .filter(book -> book.getTakenAt().plusDays(DAYS_TO_RETURN_BOOK).isBefore(LocalDateTime.now()))
                 .forEach(book -> {
                     book.setExpired(true);
                     log.info("Книга '{}' помечена как просроченная.", book.getTitle());

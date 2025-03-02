@@ -17,6 +17,7 @@ import java.util.List;
 public class BookCheckScheduler {
     private final PeopleService peopleService;
     private final EmailNotificationService emailNotificationService;
+
     @Autowired
     public BookCheckScheduler(PeopleService peopleService, EmailNotificationService emailNotificationService) {
         this.peopleService = peopleService;
@@ -24,17 +25,16 @@ public class BookCheckScheduler {
     }
 
 
-    // Запуск задачи каждый день в 00:00
+    // Запуск задачи каждый день в 09:00
     // Метод для ежедневной проверки просроченных книг
     @Transactional
-    //каждую минуту будет срабатывать
-    @Scheduled(cron = "0 * * * * ?")
+    //каждую минуту будет срабатывать, использовать для проверки работы (cron = "0 * * * * ?")
+    @Scheduled(cron = "0 0 9 * * ?")
     public void checkForExpiredBooks() {
         log.info("Запуск проверки просроченных книг...");
         List<Person> people = peopleService.findAll();
         for (Person person : people) {
-            //Собрать список с просроченными книгами
-            //достаем все книги пользователя, в этом методе они уже помечаются тру если просрочены и добавляются в список
+
             List<Book> expiredBooks = peopleService.findBookByOwner(person.getId()).stream().filter(Book::isExpired).toList();
 
             if (!expiredBooks.isEmpty()) {
