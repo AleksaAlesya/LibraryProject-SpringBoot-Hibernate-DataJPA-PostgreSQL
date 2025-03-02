@@ -27,7 +27,7 @@ public class Person {
     private String fio;
 
     @NotNull(message = "Поле Год рождения не доллжно быть пустым")
-    @Min(value = 1900, message = "Год рождения не должен быть больше 1900")
+    @Min(value = 1900, message = "Год рождения не должен быть меньше 1900")
     @Max(value = 2100, message = "WOW!!!")
     @Column(name = "yearofbirth")
     private int yearOfBirth;

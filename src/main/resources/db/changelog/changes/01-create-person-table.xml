@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!-- Создание таблицы Person -->
+    <changeSet id="1" author="aleksabrakor">
+        <createTable tableName="Person">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="fio" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="yearOfBirth" type="int">
+                <constraints nullable="false"
+                             checkConstraint="yearOfBirth &lt; 2100 AND yearOfBirth >= 1900"/>
+            </column>
+            <column name="email" type="varchar(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="number_phone" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="current_timestamp"/>
+            <column name="updated_at" type="timestamp" defaultValueComputed="current_timestamp"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
