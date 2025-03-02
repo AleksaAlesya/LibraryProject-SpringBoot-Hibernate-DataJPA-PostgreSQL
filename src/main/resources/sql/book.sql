@@ -26,4 +26,5 @@ INSERT INTO Book(title, author, year) VALUES ('Лямбда выражения �
 
 INSERT INTO Book(title, author, year,person_id, taken_at) VALUES ('Лямбда выражения в Java 8 копия. Функциональное программирование', 'Ричард_Уорбэртон',2014,3, '2025-01-06 01:24:10.513547');
 INSERT INTO Book(title, author, year,person_id, taken_at) VALUES ('Чистый код', 'Мартин Р',2019,1, '2025-01-06 01:24:10.513547');
+INSERT INTO Book(title, author, year,person_id, taken_at) VALUES ('Чистый код5', 'Мартин Р',2019,7, '2025-01-06 01:24:10.513547');
 

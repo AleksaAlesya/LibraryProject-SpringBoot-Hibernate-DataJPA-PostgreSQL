@@ -3,6 +3,7 @@ package by.aleksabrakor.libraryProject.services;
 import by.aleksabrakor.libraryProject.models.Book;
 import by.aleksabrakor.libraryProject.models.Person;
 import by.aleksabrakor.libraryProject.repositories.PeopleRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,11 +13,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Log4j2
 @Service
 @Transactional(readOnly = true)
 public class PeopleService {
     private final PeopleRepository peopleRepository;
-
 
     @Autowired
     public PeopleService(PeopleRepository peopleRepository) {
@@ -72,8 +73,9 @@ public class PeopleService {
     private void checkForExpired(List<Book> booksByOwner) {
         booksByOwner.stream()
                 .filter(book -> book.getTakenAt().plusDays(10).isBefore(LocalDateTime.now()))
-                .forEach(book -> book.setExpired(true));
-
+                .forEach(book -> {
+                    book.setExpired(true);
+                    log.info("Книга '{}' помечена как просроченная.", book.getTitle());
+                });
     }
-
 }

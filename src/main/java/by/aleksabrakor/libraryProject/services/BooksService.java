@@ -22,7 +22,6 @@ public class BooksService {
         this.booksRepository = booksRepository;
     }
 
-
     public List<Book> findWithPagination(int page, int booksPerPage, boolean sortByYear) {
         if (sortByYear) {
             return booksRepository.findAll(PageRequest.of(page, booksPerPage, Sort.by("year"))).getContent();
