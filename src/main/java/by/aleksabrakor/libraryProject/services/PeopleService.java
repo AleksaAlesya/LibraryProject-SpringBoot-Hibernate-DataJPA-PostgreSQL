@@ -48,9 +48,9 @@ public class PeopleService {
         peopleRepository.deleteById(id);
     }
 
-    //Для валидации уникальности имени
-    public Optional<Person> findByFio(String fio, int id) {
-        return peopleRepository.findByFioAndIdNot(fio, id).stream().findAny();
+    //Для валидации уникальности email
+    public Optional<Person> findByEmail(String email, int id) {
+        return peopleRepository.findByEmailAndIdNot(email, id).stream().findAny();
 
     }
 

@@ -24,8 +24,8 @@ public class PersonValidator implements Validator {
     public void validate(Object target, Errors errors) {
         Person person = (Person) target;
 
-        if (peopleService.findByFio(person.getFio(), person.getId()).isPresent()) {
-            errors.rejectValue("fio", "", "Это ФИО уже существует");
+        if (peopleService.findByEmail(person.getEmail(), person.getId()).isPresent()) {
+            errors.rejectValue("email", "", "Этот email уже существует");
         }
     }
 }

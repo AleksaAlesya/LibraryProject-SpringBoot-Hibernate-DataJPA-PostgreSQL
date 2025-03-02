@@ -37,8 +37,8 @@ class BooksControllerTest {
     @Test
     public void testFindById() {
 
-        Person person = new Person(1,"testFio1", 1984);
-        Person person2 = new Person(2,"testFio2", 1984);
+        Person person = new Person(1,"testFio1", 1984,"test1@mail.ru","+375447796977");
+        Person person2 = new Person(2,"testFio2", 1984, "test2@mail.ru","+375447796977");
         List<Person> people = new ArrayList<>(List.of(person, person2));
 
         int id = 1;

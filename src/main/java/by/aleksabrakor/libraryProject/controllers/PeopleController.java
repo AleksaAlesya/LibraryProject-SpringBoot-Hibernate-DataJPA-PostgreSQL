@@ -49,7 +49,7 @@ public class PeopleController implements ControllerI<Person> {
     @PostMapping()
     public String create(@ModelAttribute("person") @Valid Person person,
                          BindingResult bindingResult) {
-        //валидация на уникальность фио
+        //валидация на уникальность
         personValidator.validate(person,bindingResult);
 
         if (bindingResult.hasErrors()) {

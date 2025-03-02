@@ -10,10 +10,11 @@ CREATE TABLE Book(
     author varchar(50),
     year int NOT NULL ,
     person_id int REFERENCES Person (id)  ON DELETE SET NULL,
-    taken_at TIMESTAMP
+    taken_at TIMESTAMP,
+    created_at timestamp default current_timestamp,
+    updated_at  timestamp default current_timestamp
 );
 
-INSERT INTO Book(title, author, year,person_id) VALUES ('Чистый код', 'Мартин Р',2019,1);
 INSERT INTO Book(title, author, year) VALUES ('Чистый код. Создание, анализ и рефакторинг', 'Роберт Мартин',2019);
 INSERT INTO Book(title, author, year) VALUES ('Чистая архитектура', 'Роберт Мартин',2021);
 INSERT INTO Book(title, author, year) VALUES ('Java Эффективное программирование', 'Джошуа Блох',2019);
@@ -24,4 +25,5 @@ INSERT INTO Book(title, author, year) VALUES ('Программирование 
 INSERT INTO Book(title, author, year) VALUES ('Лямбда выражения в Java 8. Функциональное программирование', 'Ричард_Уорбэртон',2014);
 
 INSERT INTO Book(title, author, year,person_id, taken_at) VALUES ('Лямбда выражения в Java 8 копия. Функциональное программирование', 'Ричард_Уорбэртон',2014,3, '2025-01-06 01:24:10.513547');
+INSERT INTO Book(title, author, year,person_id, taken_at) VALUES ('Чистый код', 'Мартин Р',2019,1, '2025-01-06 01:24:10.513547');
 

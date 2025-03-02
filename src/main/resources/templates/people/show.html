@@ -5,7 +5,7 @@
     <title>Страница человека</title>
 </head>
 <body>
-<h3 th:text="${person.getFio() + ', ' + person.getYearOfBirth() }">VALUE</h3>
+<h3  th:text="${person.getFio()+', '+ person.getYearOfBirth() + ', ' + person.getNumberPhone() + ', ' + person.getEmail()}">VALUE</h3>
 
 <hr/>
 <b>Книги: </b>

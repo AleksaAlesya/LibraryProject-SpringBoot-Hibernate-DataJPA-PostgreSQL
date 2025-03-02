@@ -14,7 +14,6 @@ CREATE TABLE Book(
     author varchar(50),
     year int NOT NULL ,
     person_id int REFERENCES Person (id)  ON DELETE SET NULL
-
 );
 
 INSERT INTO Book(title, author, year,person_id) VALUES ('Чистый код', 'Мартин Р',2019,1);
