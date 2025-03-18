@@ -7,9 +7,37 @@
 <body>
 <h1>Страница со списком всех книг</h1>
 
+<!-- Форма для фильтров и пагинации -->
+<form action="/books" method="get">
+    <label>
+        Сортировать по году:
+        <input type="checkbox" name="sort_by_year" th:checked="${param.sort_by_year != null}">
+    </label>
+    <br/>
+    <label>
+        Страница:
+        <input type="number" name="page" min="1" th:value="${param.page != null} ? ${param.page} : 1">
+    </label>
+    <br/>
+    <label>
+        Книг на странице:
+        <input type="number" name="books_per_page" min="1" th:value="${param.books_per_page != null} ? ${param.books_per_page} : 10">
+    </label>
+    <br/>
+    <button type="submit">Применить</button>
+</form>
 <br/>
-<a href="/books/search">Поиск книги по названию </a>
-<br/>
+
+<!--<br/>-->
+<!--<a href="/books/search">Поиск книги по названию </a>-->
+<!--<br/>-->
+<!-- Форма поиска -->
+<form th:method="POST" th:action="@{/books/search}">
+    <label for="title_start_with">Найти книгу по названию:</label>
+    <input type="text" id="title_start_with" name="title_start_with" placeholder="Введите название книги" required>
+    <button type="submit">Найти</button>
+</form>
+
 <hr/>
 
 <div th:each="book : ${books}">

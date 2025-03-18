@@ -42,7 +42,7 @@ public class BooksService {
     }
 
     public List<Book> findByTitleStartingWith(String titleStartWith) {
-        return booksRepository.findByTitleStartingWith(titleStartWith);
+        return booksRepository.findByTitleStartingWithIgnoreCase(titleStartWith);
     }
 
     @Transactional
