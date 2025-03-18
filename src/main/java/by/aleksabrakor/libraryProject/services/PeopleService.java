@@ -2,9 +2,12 @@ package by.aleksabrakor.libraryProject.services;
 
 import by.aleksabrakor.libraryProject.models.Book;
 import by.aleksabrakor.libraryProject.models.Person;
+import by.aleksabrakor.libraryProject.repositories.BooksRepository;
 import by.aleksabrakor.libraryProject.repositories.PeopleRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,12 +20,29 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 public class PeopleService {
+    private final BooksRepository booksRepository;
     private final PeopleRepository peopleRepository;
     private static final int DAYS_TO_RETURN_BOOK = 30;
 
     @Autowired
-    public PeopleService(PeopleRepository peopleRepository) {
+    public PeopleService(PeopleRepository peopleRepository,
+                         BooksRepository booksRepository) {
         this.peopleRepository = peopleRepository;
+        this.booksRepository = booksRepository;
+    }
+    public List<Person> findWithPagination(int page, int peoplePerPage, boolean sortByFio) {
+        if (sortByFio) {
+            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage, Sort.by("fio"))).getContent();
+        } else {
+            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage)).getContent();
+        }
+    }
+
+    public List<Person> findAll(boolean sortByFio) {
+        if (sortByFio)
+            return peopleRepository.findAll(Sort.by("fio"));
+        else
+            return peopleRepository.findAll();
     }
 
     public List<Person> findAll() {
@@ -78,5 +98,9 @@ public class PeopleService {
                     book.setExpired(true);
                     log.info("Книга '{}' помечена как просроченная.", book.getTitle());
                 });
+    }
+
+    public List<Person> findByFioStartingWith(String fioStartWith) {
+        return peopleRepository.findByFioStartingWithIgnoreCase(fioStartWith);
     }
 }

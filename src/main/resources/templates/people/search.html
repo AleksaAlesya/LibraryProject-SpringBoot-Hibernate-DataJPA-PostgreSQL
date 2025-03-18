@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Страница поиска человека</title>
+</head>
+<body>
+<h1>Поиск человека</h1>
+
+<!-- Форма поиска -->
+<form th:method="POST" th:action="@{/people/search}">
+    <label for="fio_start_with">Имя человека:</label>
+    <input type="text" id="fio_start_with" name="fio_start_with" placeholder="Введите имя человека" required>
+    <button type="submit">Найти</button>
+</form>
+
+<!-- Логика отображения результата -->
+<div th:if="${people}">
+  <h2>Результат поиска:</h2>
+    <div th:if="${people.isEmpty()}">
+        <span>Человек не найден</span>
+    </div>
+
+    <div th:each="person : ${people}">
+        <a th:href="@{/people/{id}(id=${person.getId()})}"
+           th:text="${person.getFio()+', '+ person.getYearOfBirth() + ', ' + person.getNumberPhone() + ', ' + person.getEmail()}">user</a>
+    </div>
+</div>
+
+<hr/>
+<a href="/">На главную страницу </a>
+
+</body>
+</html>
+
+
+
