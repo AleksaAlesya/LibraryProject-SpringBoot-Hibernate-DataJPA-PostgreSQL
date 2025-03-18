@@ -40,6 +40,10 @@ public class BooksController implements ControllerI<Book> {
         if (page == null || booksPerPage == null) {
             model.addAttribute("books", booksService.findAll(sortByYear)); //выдача всех книг
         } else {
+            if (page<1){
+                page = 1;
+                //что бы не могли указать отрицательное значение
+            }
             model.addAttribute("books", booksService.findWithPagination(page, booksPerPage, sortByYear));
         }
         return "books/index";

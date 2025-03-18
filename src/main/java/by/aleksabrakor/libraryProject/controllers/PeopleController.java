@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/people")
 public class PeopleController implements ControllerI<Person> {
@@ -26,8 +28,19 @@ public class PeopleController implements ControllerI<Person> {
     }
 
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("people", peopleService.findAll());
+    public String index(Model model,
+                        @RequestParam(value = "sort_by_fio", required = false) boolean sortByFio,
+                        @RequestParam(value = "page", required = false) Integer page,
+                        @RequestParam(value = "people_per_page", required = false) Integer peoplePerPage) {
+        if (page == null || peoplePerPage == null) {
+            model.addAttribute("people", peopleService.findAll(sortByFio)); //выдача всех людей
+        } else {
+            if (page<1){
+                page = 1;
+                //что бы не могли указать отрицательное значение
+            }
+            model.addAttribute("people", peopleService.findWithPagination(page, peoplePerPage, sortByFio));
+        }
         return "people/index";
     }
 
@@ -84,6 +97,20 @@ public class PeopleController implements ControllerI<Person> {
     public String delete(@PathVariable("id") int id) {
         peopleService.deleteById(id);
         return ("redirect:/people");
+    }
+
+    @GetMapping("/search")
+    public String searchPage() {
+        return "people/search";
+    }
+
+    @PostMapping("/search")
+    public String makSearch(Model model,
+                            @RequestParam(value = "fio_start_with", required = false) String fioStartWith) {
+        model.addAttribute("people", peopleService.findByFioStartingWith(fioStartWith));
+        List<Person> list = peopleService.findByFioStartingWith(fioStartWith);
+        System.out.println(list);
+        return "people/search";
     }
 
     //Пара ключ-значение добавится в модел каждого метода этого контроллера
