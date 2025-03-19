@@ -1,5 +1,67 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org/">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Страница со списком всех людей</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<h1>Страница со списком всех людей</h1>-->
+
+<!--&lt;!&ndash; Форма для фильтров и пагинации &ndash;&gt;-->
+<!--<form action="/people" method="get">-->
+<!--    <label>-->
+<!--        Сортировать по ФИО:-->
+<!--        <input type="checkbox" name="sort_by_fio" th:checked="${param.sort_by_fio != null}">-->
+<!--    </label>-->
+<!--    <br/>-->
+<!--    <label>-->
+<!--        Сортировать по году рождения:-->
+<!--        <input type="checkbox" name="sort_by_yearOfBirth" th:checked="${param.sort_by_yearOfBirth != null}">-->
+<!--    </label>-->
+<!--    <br/>-->
+<!--    <label>-->
+<!--        Страница:-->
+<!--        <input type="number" name="page" min="1"-->
+<!--               th:value="${param.page != null} ? ${param.page} : 1"-->
+<!--        >-->
+<!--    </label>-->
+<!--    <br/>-->
+<!--    <label>-->
+<!--        Человек на странице:-->
+<!--        <input type="number" name="people_per_page" min="1"-->
+<!--               th:value="${param.people_per_page != null} ? ${param.people_per_page} : 10"-->
+<!--        >-->
+<!--    </label>-->
+<!--    <br/>-->
+<!--    <button type="submit">Применить</button>-->
+<!--</form>-->
+<!--<br/>-->
+
+<!--<form th:method="POST" th:action="@{/people/search}">-->
+<!--    <label for="fio_start_with">Найти человека по ФИО:</label>-->
+<!--    <input type="text" id="fio_start_with" name="fio_start_with" placeholder="Введите ФИО человека" required>-->
+<!--    <button type="submit">Найти</button>-->
+<!--</form>-->
+<!--<br/>-->
+
+<!--<div th:each="person : ${people}">-->
+<!--    <a th:href="@{/people/{id}(id=${person.getId()})}"-->
+<!--       th:text="${person.getFio()+', '+ person.getYearOfBirth() + ', ' + person.getNumberPhone() + ', ' + person.getEmail()}">user</a>-->
+
+<!--</div>-->
+<!--<br/>-->
+<!--<hr/>-->
+<!--<a href="/people/new">Создать нового человека </a>-->
+<!--<br/>-->
+<!--<hr/>-->
+<!--<a href="/">На главную страницу </a>-->
+<!--</body>-->
+<!--</html>-->
+
+
 <!DOCTYPE html>
-<html lang="en" html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org/">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org/">
 <head>
     <meta charset="UTF-8">
     <title>Страница со списком всех людей</title>
@@ -16,31 +78,77 @@
     </label>
     <br/>
     <label>
+        Сортировать по году рождения:
+        <input type="checkbox" name="sort_by_yearOfBirth" th:checked="${param.sort_by_yearOfBirth != null}">
+    </label>
+    <br/>
+    <label>
         Страница:
-        <input type="number" name="page" min="1" th:value="${param.page != null} ? ${param.page} : 1">
+        <input type="number" name="page" min="1"
+               th:value="${param.page != null} ? ${param.page} : 1"
+        >
     </label>
     <br/>
     <label>
         Человек на странице:
-        <input type="number" name="people_per_page" min="1" th:value="${param.people_per_page != null} ? ${param.people_per_page} : 10">
+        <input type="number" name="people_per_page" min="1"
+               th:value="${param.people_per_page != null} ? ${param.people_per_page} : 10"
+        >
     </label>
     <br/>
     <button type="submit">Применить</button>
 </form>
 <br/>
 
+<!-- Форма для поиска по ФИО -->
 <form th:method="POST" th:action="@{/people/search}">
-    <label for="fio_start_with">Найти человека по фио:</label>
+    <label for="fio_start_with">Найти человека по ФИО:</label>
     <input type="text" id="fio_start_with" name="fio_start_with" placeholder="Введите ФИО человека" required>
     <button type="submit">Найти</button>
 </form>
+<br/>
 
+<!-- Таблица со списком людей -->
+<table border="1">
+    <thead>
+    <tr>
+        <th>ФИО</th>
+        <th>Год рождения</th>
+        <th>Номер телефона</th>
+        <th>Email</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="person : ${people}">
+        <td>
+        <a th:href="@{/people/{id}(id=${person.getId()})}"
+           th:text="${person.getFio()}">user</a>
+        </td>
+        <td th:text="${person.yearOfBirth}"></td>
+        <td th:text="${person.numberPhone}"></td>
+        <td th:text="${person.email}"></td>
+    </tr>
+    </tbody>
+</table>
 
-<div th:each="person : ${people}">
-    <a th:href="@{/people/{id}(id=${person.getId()})}"
-       th:text="${person.getFio()+', '+ person.getYearOfBirth() + ', ' + person.getNumberPhone() + ', ' + person.getEmail()}">user</a>
+<div th:if="${totalPages > 1}">
+    <span>Страницы:</span>
+    <!-- Ссылка на первую страницу -->
+    <a th:if="${currentPage > 1}" th:href="${baseUrl + '&page=1'}">1</a>
+    <span th:if="${startPage > 2}">...</span>
 
+    <!-- Ссылки на страницы в диапазоне -->
+    <th:block th:each="i : ${#numbers.sequence(startPage, endPage)}">
+        <a th:if="${i != currentPage}" th:href="${baseUrl + '&page=' + i}" th:text="${i}"></a>
+        <span th:if="${i == currentPage}" th:text="${i}" style="font-weight: bold;"></span>
+    </th:block>
+
+    <span th:if="${endPage < totalPages - 1}">...</span>
+
+    <!-- Ссылка на последнюю страницу -->
+    <a th:if="${currentPage < totalPages}" th:href="${baseUrl + '&page=' + totalPages}" th:text="${totalPages}">Последняя страница</a>
 </div>
+
 <br/>
 <hr/>
 <a href="/people/new">Создать нового человека </a>
@@ -49,3 +157,5 @@
 <a href="/">На главную страницу </a>
 </body>
 </html>
+
+

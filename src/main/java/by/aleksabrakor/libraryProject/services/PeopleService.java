@@ -6,6 +6,7 @@ import by.aleksabrakor.libraryProject.repositories.BooksRepository;
 import by.aleksabrakor.libraryProject.repositories.PeopleRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -20,30 +21,55 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 public class PeopleService {
-    private final BooksRepository booksRepository;
+
     private final PeopleRepository peopleRepository;
     private static final int DAYS_TO_RETURN_BOOK = 30;
 
     @Autowired
-    public PeopleService(PeopleRepository peopleRepository,
-                         BooksRepository booksRepository) {
+    public PeopleService(PeopleRepository peopleRepository) {
         this.peopleRepository = peopleRepository;
-        this.booksRepository = booksRepository;
+
     }
-    public List<Person> findWithPagination(int page, int peoplePerPage, boolean sortByFio) {
-        if (sortByFio) {
-            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage, Sort.by("fio"))).getContent();
+
+    public Page<Person> findWithPagination(int page, int peoplePerPage, boolean sortByFio, boolean sortByYearOfBirth) {
+
+        if (sortByFio && !sortByYearOfBirth) {
+            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage, Sort.by("fio")));
+        }
+        if (sortByYearOfBirth && !sortByFio) {
+            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage, Sort.by("yearOfBirth")));
+        }
+        if (sortByFio && sortByYearOfBirth) {
+            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage, Sort.by("fio", "yearOfBirth")));
         } else {
-            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage)).getContent();
+            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage));
         }
     }
 
-    public List<Person> findAll(boolean sortByFio) {
-        if (sortByFio)
-            return peopleRepository.findAll(Sort.by("fio"));
-        else
-            return peopleRepository.findAll();
-    }
+//    public List<Person> findWithPagination(int page, int peoplePerPage, boolean sortByFio, boolean sortByYearOfBirth) {
+//        if (sortByFio && !sortByYearOfBirth) {
+//            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage, Sort.by("fio"))).getContent();
+//        }
+//        if (sortByYearOfBirth && !sortByFio) {
+//            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage, Sort.by("yearOfBirth"))).getContent();
+//        }
+//        if (sortByFio && sortByYearOfBirth){
+//            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage, Sort.by("fio").and(Sort.by("yearOfBirth")))).getContent();
+//        }else {
+//            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage)).getContent();
+//        }
+//    }
+
+//    public List<Person> findAll(boolean sortByFio, boolean sortByYearOfBirth) {
+//        if (sortByFio && !sortByYearOfBirth)
+//            return peopleRepository.findAll(Sort.by("fio"));
+//        if (sortByYearOfBirth && !sortByFio)
+//            return peopleRepository.findAll(Sort.by("yearOfBirth"));
+//        if (sortByFio && sortByYearOfBirth)
+//            return peopleRepository.findAll(Sort.by("fio").and(Sort.by("yearOfBirth")));
+//        else
+//            return findAll();
+//    }
 
     public List<Person> findAll() {
         return peopleRepository.findAll();

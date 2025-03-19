@@ -31,7 +31,7 @@ public class Book {
     @Column(name = "author")
     private String author;
 
-    @NotNull(message = "Поле не доллжен быть пустым")
+    @NotNull(message = "Поле не должно быть пустым")
     @Column(name = "year")
     private int year;
 
