@@ -92,7 +92,7 @@
     <label>
         Человек на странице:
         <input type="number" name="people_per_page" min="1"
-               th:value="${param.people_per_page != null} ? ${param.people_per_page} : 10"
+               th:value="${param.people_per_page != null} ? ${param.people_per_page} : 30"
         >
     </label>
     <br/>
@@ -119,7 +119,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="person : ${people}">
+    <tr th:each="person : ${paginationData.items}">
         <td>
         <a th:href="@{/people/{id}(id=${person.getId()})}"
            th:text="${person.getFio()}">user</a>
@@ -131,24 +131,34 @@
     </tbody>
 </table>
 
-<div th:if="${totalPages > 1}">
-    <span>Страницы:</span>
+<div th:if="${paginationData.totalPages > 1}">
+
     <!-- Ссылка на первую страницу -->
-    <a th:if="${currentPage > 1}" th:href="${baseUrl + '&page=1'}">1</a>
-    <span th:if="${startPage > 2}">...</span>
+    <a th:if="${paginationData.currentPage > 0}" th:href="${paginationData.baseUrl + '&page=1'}">First</a>
+
+    <!-- Кнопка Previous -->
+    <a th:if="${paginationData.currentPage > 0}" th:href="@{${paginationData.baseUrl} + '&page=' + ${paginationData.currentPage - 1}}"><<<</a>
+
+    <!-- Eсли диапазон страниц начинается не с первой -->
+    <span th:if="${paginationData.startPage > 2}">...</span>
 
     <!-- Ссылки на страницы в диапазоне -->
-    <th:block th:each="i : ${#numbers.sequence(startPage, endPage)}">
-        <a th:if="${i != currentPage}" th:href="${baseUrl + '&page=' + i}" th:text="${i}"></a>
-        <span th:if="${i == currentPage}" th:text="${i}" style="font-weight: bold;"></span>
+    <th:block th:each="i : ${#numbers.sequence(paginationData.startPage, paginationData.endPage)}">
+        <a th:if="${i != paginationData.currentPage}" th:href="${paginationData.baseUrl + '&page=' + i}" th:text="${i}"></a>
+        <span th:if="${i == paginationData.currentPage}" th:text="${i}" style="font-weight: bold;"></span>
     </th:block>
 
-    <span th:if="${endPage < totalPages - 1}">...</span>
+    <!-- Многоточие, если диапазон страниц заканчивается не на последней -->
+    <span th:if="${paginationData.endPage < paginationData.totalPages - 1}">...</span>
 
+    <!-- Кнопка Next -->
+    <a th:if="${paginationData.currentPage < paginationData.totalPages}"  th:href="@{${paginationData.baseUrl} + '&page=' + ${paginationData.currentPage + 1}}"> >>></a>
     <!-- Ссылка на последнюю страницу -->
-    <a th:if="${currentPage < totalPages}" th:href="${baseUrl + '&page=' + totalPages}" th:text="${totalPages}">Последняя страница</a>
+    <a th:href="@{${paginationData.baseUrl} + '&page=' + ${paginationData.totalPages}}">Last</a>
 </div>
 
+<br/>
+<br/>
 <br/>
 <hr/>
 <a href="/people/new">Создать нового человека </a>

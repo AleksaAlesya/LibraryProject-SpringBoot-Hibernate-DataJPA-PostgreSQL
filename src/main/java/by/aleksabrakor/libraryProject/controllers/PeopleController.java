@@ -2,6 +2,7 @@ package by.aleksabrakor.libraryProject.controllers;
 
 
 import by.aleksabrakor.libraryProject.models.Person;
+import by.aleksabrakor.libraryProject.pagination.PaginationData;
 import by.aleksabrakor.libraryProject.services.PeopleService;
 import by.aleksabrakor.libraryProject.sort.strategy.SortStrategy;
 import by.aleksabrakor.libraryProject.sort.SortStrategyFactory;
@@ -16,6 +17,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static by.aleksabrakor.libraryProject.pagination.PaginationData.createPaginationData;
+import static by.aleksabrakor.libraryProject.util.UrlUtils.formingBaseUrl;
 
 @Controller
 @RequestMapping("/people")
@@ -42,32 +46,26 @@ public class PeopleController implements ControllerI<Person> {
             page = 1;
         }
         if (peoplePerPage < 1) {
-            peoplePerPage = 10;
+            peoplePerPage = 30;
         }
 
-        // Преобразуем страницу в нулевой индекс
-        int zeroBasedPage = page - 1;
+        //Сортируем в соответствии с заданными параметрами
+        SortStrategy<Person> personSortStrategy = SortStrategyFactory.createPersonSortStrategy(sortByFio, sortByYearOfBirth);
 
         // Получаем данные с пагинацией
-//        Page<Person> peoplePage = peopleService.findWithPagination(zeroBasedPage, peoplePerPage, sortByFio, sortByYearOfBirth);
-        SortStrategy<Person> personSortStrategy = SortStrategyFactory.createPersonSortStrategy(sortByFio, sortByYearOfBirth);
-        Page<Person> peoplePage = peopleService.findWithPagination(zeroBasedPage, peoplePerPage, personSortStrategy);
+        Page<Person> peoplePage = peopleService.findWithPagination(page, peoplePerPage, personSortStrategy);
 
+        // Проверяем, если page больше общего количества страниц, перенаправляем на последнюю страницу
+        if (page > peoplePage.getTotalPages()) {
+            return "redirect:" + formingBaseUrl(sortByFio, sortByYearOfBirth, peoplePerPage) + "&page=" + peoplePage.getTotalPages();
+        }
+
+        // Формируем базовый URL
+        String baseUrl = formingBaseUrl(sortByFio,sortByYearOfBirth,peoplePerPage);
         // Вычисляем диапазон страниц для пагинации
-        int totalPages = peoplePage.getTotalPages();
-        int currentPage = page;
-        int startPage = Math.max(1, currentPage - 2);
-        int endPage = Math.min(currentPage + 2, totalPages);
-        StringBuilder baseUrl =formingBaseUrl(sortByFio,sortByYearOfBirth,peoplePerPage);
+        PaginationData<Person> personPaginationData = createPaginationData(peoplePage,page,baseUrl);
 
-        // Передаем данные в модель
-        model.addAttribute("people", peoplePage.getContent()); // Список людей на текущей странице
-        model.addAttribute("currentPage", currentPage); // Текущая страница (начинается с 1)
-        model.addAttribute("totalPages", totalPages); // Общее количество страниц
-        model.addAttribute("startPage", startPage); // Начальная страница для отображения
-        model.addAttribute("endPage", endPage); // Конечная страница для отображения
-        model.addAttribute("baseUrl",baseUrl); // Базовый URL с параметрами сортировки
-
+        model.addAttribute("paginationData", personPaginationData);
         return "people/index";
     }
 
@@ -138,18 +136,6 @@ public class PeopleController implements ControllerI<Person> {
         List<Person> list = peopleService.findByFioStartingWith(fioStartWith);
         System.out.println(list);
         return "people/search";
-    }
-
-    private StringBuilder formingBaseUrl(boolean sortByFio, boolean sortByYearOfBirth, int peoplePerPage){
-        StringBuilder baseUrl = new StringBuilder("/people?");
-        if (sortByFio ) {
-            baseUrl.append("sort_by_fio=").append(sortByFio).append("&");
-        }
-        if (sortByYearOfBirth) {
-            baseUrl.append("sort_by_yearOfBirth=").append(sortByYearOfBirth).append("&");
-        }
-        baseUrl.append("people_per_page=").append(peoplePerPage);
-        return baseUrl;
     }
 
     //Пара ключ-значение добавится в модел каждого метода этого контроллера

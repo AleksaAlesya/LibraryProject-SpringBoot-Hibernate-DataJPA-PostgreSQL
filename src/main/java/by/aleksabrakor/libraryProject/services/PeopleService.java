@@ -36,8 +36,8 @@ public Page<Person> findWithPagination(int page, int itemsPerPage, SortStrategy<
     // Создаем спецификацию с сортировкой
     Specification<Person> spec = EntitySpecifications.withSorting(sortStrategy);
 
-    // Выполняем запрос с пагинацией
-    return peopleRepository.findAll(spec, PageRequest.of(page, itemsPerPage));
+    // Выполняем запрос с пагинацией, учитываем, что начало с 0 индекса
+    return peopleRepository.findAll(spec, PageRequest.of(page-1, itemsPerPage));
 }
 
     public List<Person> findAll() {
