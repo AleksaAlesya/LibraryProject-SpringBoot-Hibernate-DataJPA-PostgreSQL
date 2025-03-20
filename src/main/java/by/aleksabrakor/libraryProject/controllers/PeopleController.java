@@ -3,6 +3,8 @@ package by.aleksabrakor.libraryProject.controllers;
 
 import by.aleksabrakor.libraryProject.models.Person;
 import by.aleksabrakor.libraryProject.services.PeopleService;
+import by.aleksabrakor.libraryProject.sort.strategy.SortStrategy;
+import by.aleksabrakor.libraryProject.sort.SortStrategyFactory;
 import by.aleksabrakor.libraryProject.util.PersonValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -28,26 +30,6 @@ public class PeopleController implements ControllerI<Person> {
         this.personValidator = personValidator;
     }
 
-//    @GetMapping
-//    public String index(Model model,
-//                        @RequestParam(value = "sort_by_fio", required = false) boolean sortByFio,
-//                        @RequestParam(value = "sort_by_yearOfBirth", required = false) boolean sortByYearOfBirth,
-//                        @RequestParam(value = "page", required = false) Integer page,
-//                        @RequestParam(value = "people_per_page", required = false) Integer peoplePerPage) {
-//
-//        if (page == null || peoplePerPage == null) {
-//            model.addAttribute("people", peopleService.findAll(sortByFio, sortByYearOfBirth));
-//        } else {
-//            if (page < 1) {
-//                page = 1;
-//                //что бы не могли указать отрицательное значение
-//            }
-//            int zeroBasedPage = page - 1;
-//            model.addAttribute("people", peopleService.findWithPagination(zeroBasedPage, peoplePerPage, sortByFio, sortByYearOfBirth));
-//        }
-//        return "people/index";
-//    }
-
     @GetMapping
     public String index(Model model,
                         @RequestParam(value = "sort_by_fio", required = false) boolean sortByFio,
@@ -67,7 +49,9 @@ public class PeopleController implements ControllerI<Person> {
         int zeroBasedPage = page - 1;
 
         // Получаем данные с пагинацией
-        Page<Person> peoplePage = peopleService.findWithPagination(zeroBasedPage, peoplePerPage, sortByFio, sortByYearOfBirth);
+//        Page<Person> peoplePage = peopleService.findWithPagination(zeroBasedPage, peoplePerPage, sortByFio, sortByYearOfBirth);
+        SortStrategy<Person> personSortStrategy = SortStrategyFactory.createPersonSortStrategy(sortByFio, sortByYearOfBirth);
+        Page<Person> peoplePage = peopleService.findWithPagination(zeroBasedPage, peoplePerPage, personSortStrategy);
 
         // Вычисляем диапазон страниц для пагинации
         int totalPages = peoplePage.getTotalPages();
