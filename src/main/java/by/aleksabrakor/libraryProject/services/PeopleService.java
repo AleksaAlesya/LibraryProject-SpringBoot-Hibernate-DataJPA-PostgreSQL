@@ -2,13 +2,13 @@ package by.aleksabrakor.libraryProject.services;
 
 import by.aleksabrakor.libraryProject.models.Book;
 import by.aleksabrakor.libraryProject.models.Person;
-import by.aleksabrakor.libraryProject.repositories.BooksRepository;
 import by.aleksabrakor.libraryProject.repositories.PeopleRepository;
+import by.aleksabrakor.libraryProject.specification.PeopleSpecification;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,44 +32,10 @@ public class PeopleService {
     }
 
     public Page<Person> findWithPagination(int page, int peoplePerPage, boolean sortByFio, boolean sortByYearOfBirth) {
-
-        if (sortByFio && !sortByYearOfBirth) {
-            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage, Sort.by("fio")));
-        }
-        if (sortByYearOfBirth && !sortByFio) {
-            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage, Sort.by("yearOfBirth")));
-        }
-        if (sortByFio && sortByYearOfBirth) {
-            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage, Sort.by("fio", "yearOfBirth")));
-        } else {
-            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage));
-        }
+        Specification<Person> specification = Specification
+                .where(PeopleSpecification.sortByFio(sortByFio, sortByYearOfBirth));
+        return peopleRepository.findAll(specification, PageRequest.of(page, peoplePerPage));
     }
-
-//    public List<Person> findWithPagination(int page, int peoplePerPage, boolean sortByFio, boolean sortByYearOfBirth) {
-//        if (sortByFio && !sortByYearOfBirth) {
-//            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage, Sort.by("fio"))).getContent();
-//        }
-//        if (sortByYearOfBirth && !sortByFio) {
-//            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage, Sort.by("yearOfBirth"))).getContent();
-//        }
-//        if (sortByFio && sortByYearOfBirth){
-//            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage, Sort.by("fio").and(Sort.by("yearOfBirth")))).getContent();
-//        }else {
-//            return peopleRepository.findAll(PageRequest.of(page, peoplePerPage)).getContent();
-//        }
-//    }
-
-//    public List<Person> findAll(boolean sortByFio, boolean sortByYearOfBirth) {
-//        if (sortByFio && !sortByYearOfBirth)
-//            return peopleRepository.findAll(Sort.by("fio"));
-//        if (sortByYearOfBirth && !sortByFio)
-//            return peopleRepository.findAll(Sort.by("yearOfBirth"));
-//        if (sortByFio && sortByYearOfBirth)
-//            return peopleRepository.findAll(Sort.by("fio").and(Sort.by("yearOfBirth")));
-//        else
-//            return findAll();
-//    }
 
     public List<Person> findAll() {
         return peopleRepository.findAll();
