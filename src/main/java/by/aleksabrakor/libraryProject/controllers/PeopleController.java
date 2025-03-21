@@ -4,8 +4,6 @@ package by.aleksabrakor.libraryProject.controllers;
 import by.aleksabrakor.libraryProject.models.Person;
 import by.aleksabrakor.libraryProject.pagination.PaginationData;
 import by.aleksabrakor.libraryProject.services.PeopleService;
-import by.aleksabrakor.libraryProject.sort.strategy.SortStrategy;
-import by.aleksabrakor.libraryProject.sort.SortStrategyFactory;
 import by.aleksabrakor.libraryProject.util.PersonValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -49,11 +47,8 @@ public class PeopleController implements ControllerI<Person> {
             peoplePerPage = 30;
         }
 
-        //Сортируем в соответствии с заданными параметрами
-        SortStrategy<Person> personSortStrategy = SortStrategyFactory.createPersonSortStrategy(sortByFio, sortByYearOfBirth);
-
-        // Получаем данные с пагинацией
-        Page<Person> peoplePage = peopleService.findWithPagination(page, peoplePerPage, personSortStrategy);
+        //Сортируем и Получаем данные с пагинацией
+        Page<Person> peoplePage = peopleService.findWithPagination(page, peoplePerPage, sortByFio,sortByYearOfBirth);
 
         // Проверяем, если page больше общего количества страниц, перенаправляем на последнюю страницу
         if (page > peoplePage.getTotalPages()) {
@@ -132,6 +127,7 @@ public class PeopleController implements ControllerI<Person> {
     @PostMapping("/search")
     public String makSearch(Model model,
                             @RequestParam(value = "fio_start_with", required = false) String fioStartWith) {
+
         model.addAttribute("people", peopleService.findByFioStartingWith(fioStartWith));
         List<Person> list = peopleService.findByFioStartingWith(fioStartWith);
         System.out.println(list);

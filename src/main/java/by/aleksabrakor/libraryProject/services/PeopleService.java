@@ -3,8 +3,7 @@ package by.aleksabrakor.libraryProject.services;
 import by.aleksabrakor.libraryProject.models.Book;
 import by.aleksabrakor.libraryProject.models.Person;
 import by.aleksabrakor.libraryProject.repositories.PeopleRepository;
-import by.aleksabrakor.libraryProject.specification.EntitySpecifications;
-import by.aleksabrakor.libraryProject.sort.strategy.SortStrategy;
+import by.aleksabrakor.libraryProject.specification.PeopleSpecification;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,22 +22,21 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class PeopleService {
 
-    private final PeopleRepository peopleRepository;
     private static final int DAYS_TO_RETURN_BOOK = 30;
+    private final PeopleRepository peopleRepository;
 
     @Autowired
     public PeopleService(PeopleRepository peopleRepository) {
         this.peopleRepository = peopleRepository;
-
     }
 
-public Page<Person> findWithPagination(int page, int itemsPerPage, SortStrategy<Person> sortStrategy) {
-    // Создаем спецификацию с сортировкой
-    Specification<Person> spec = EntitySpecifications.withSorting(sortStrategy);
+    public Page<Person> findWithPagination(int page, int itemsPerPage, boolean sortByFio,boolean sortByYearOfBirth) {
+        // Создаем спецификацию с сортировкой
+        Specification<Person> spec = PeopleSpecification.sortByFio(sortByFio,sortByYearOfBirth);
 
-    // Выполняем запрос с пагинацией, учитываем, что начало с 0 индекса
-    return peopleRepository.findAll(spec, PageRequest.of(page-1, itemsPerPage));
-}
+        // Выполняем запрос с пагинацией, учитываем, что начало с 0 индекса
+        return peopleRepository.findAll(spec, PageRequest.of(page - 1, itemsPerPage));
+    }
 
     public List<Person> findAll() {
         return peopleRepository.findAll();
@@ -68,7 +66,6 @@ public Page<Person> findWithPagination(int page, int itemsPerPage, SortStrategy<
     //Для валидации уникальности email
     public Optional<Person> findByEmail(String email, int id) {
         return peopleRepository.findByEmailAndIdNot(email, id).stream().findAny();
-
     }
 
     public Person findPersonByBooksId(int id) {
