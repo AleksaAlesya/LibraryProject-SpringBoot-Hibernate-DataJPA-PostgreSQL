@@ -3,9 +3,11 @@ package by.aleksabrakor.libraryProject.services;
 import by.aleksabrakor.libraryProject.models.Book;
 import by.aleksabrakor.libraryProject.models.Person;
 import by.aleksabrakor.libraryProject.repositories.BooksRepository;
+import by.aleksabrakor.libraryProject.specification.BooksSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,20 +24,14 @@ public class BooksService {
         this.booksRepository = booksRepository;
     }
 
-    public List<Book> findWithPagination(int page, int booksPerPage, boolean sortByYear) {
-        if (sortByYear) {
-            return booksRepository.findAll(PageRequest.of(page, booksPerPage, Sort.by("year"))).getContent();
-        } else {
-            return booksRepository.findAll(PageRequest.of(page, booksPerPage)).getContent();
-        }
+    public Page<Book> findWithPagination(int page, int itemsPerPage, boolean sortByTitle, boolean sortByAuthor, boolean sortByYear) {
+        // Создаем спецификацию с сортировкой
+        Specification<Book> spec = BooksSpecification.sortByParameters(sortByTitle, sortByAuthor, sortByYear);
+
+        // Выполняем запрос с пагинацией, учитываем, что начало с 0 индекса
+        return booksRepository.findAll(spec, PageRequest.of(page - 1, itemsPerPage));
     }
 
-    public List<Book> findAll(boolean sortByYear) {
-        if (sortByYear)
-            return booksRepository.findAll(Sort.by("year"));
-        else
-            return booksRepository.findAll();
-    }
 
     public Book findById(int bookId) {
         return booksRepository.findById(bookId).orElse(null);

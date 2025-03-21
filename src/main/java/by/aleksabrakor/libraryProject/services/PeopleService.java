@@ -32,7 +32,7 @@ public class PeopleService {
 
     public Page<Person> findWithPagination(int page, int itemsPerPage, boolean sortByFio,boolean sortByYearOfBirth) {
         // Создаем спецификацию с сортировкой
-        Specification<Person> spec = PeopleSpecification.sortByFio(sortByFio,sortByYearOfBirth);
+        Specification<Person> spec = PeopleSpecification.sortByParameter(sortByFio,sortByYearOfBirth);
 
         // Выполняем запрос с пагинацией, учитываем, что начало с 0 индекса
         return peopleRepository.findAll(spec, PageRequest.of(page - 1, itemsPerPage));

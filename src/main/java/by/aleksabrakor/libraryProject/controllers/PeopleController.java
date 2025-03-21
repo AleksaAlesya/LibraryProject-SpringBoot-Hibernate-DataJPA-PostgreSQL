@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static by.aleksabrakor.libraryProject.pagination.PaginationData.createPaginationData;
-import static by.aleksabrakor.libraryProject.util.UrlUtils.formingBaseUrl;
+import static by.aleksabrakor.libraryProject.util.UrlUtils.formingBaseUrlForPeople;
 
 @Controller
 @RequestMapping("/people")
@@ -50,13 +50,14 @@ public class PeopleController implements ControllerI<Person> {
         //Сортируем и Получаем данные с пагинацией
         Page<Person> peoplePage = peopleService.findWithPagination(page, peoplePerPage, sortByFio,sortByYearOfBirth);
 
+        // Формируем базовый URL
+        String baseUrl = formingBaseUrlForPeople(sortByFio,sortByYearOfBirth,peoplePerPage);
+
         // Проверяем, если page больше общего количества страниц, перенаправляем на последнюю страницу
         if (page > peoplePage.getTotalPages()) {
-            return "redirect:" + formingBaseUrl(sortByFio, sortByYearOfBirth, peoplePerPage) + "&page=" + peoplePage.getTotalPages();
+            return "redirect:" + baseUrl + "&page=" + peoplePage.getTotalPages();
         }
 
-        // Формируем базовый URL
-        String baseUrl = formingBaseUrl(sortByFio,sortByYearOfBirth,peoplePerPage);
         // Вычисляем диапазон страниц для пагинации
         PaginationData<Person> personPaginationData = createPaginationData(peoplePage,page,baseUrl);
 

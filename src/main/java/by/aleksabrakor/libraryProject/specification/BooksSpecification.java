@@ -1,23 +1,26 @@
 package by.aleksabrakor.libraryProject.specification;
 
-import by.aleksabrakor.libraryProject.models.Person;
+import by.aleksabrakor.libraryProject.models.Book;
 import jakarta.persistence.criteria.Order;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PeopleSpecification {
+public class BooksSpecification {
 
-    public static Specification<Person> sortByParameter(boolean sortByFio, boolean sortByYearOfBirth) {
+    public static Specification<Book> sortByParameters(boolean  sortByTitle, boolean sortByAuthor, boolean sortByYear) {
         return (root, query, criteriaBuilder) -> {
             // Создаем список для хранения порядка сортировки
             List<Order> orders = new ArrayList<>();
-            if (sortByFio) {
-                orders.add(criteriaBuilder.asc(root.get("fio")));
+            if (sortByTitle) {
+                orders.add(criteriaBuilder.asc(root.get("title")));
             }
-            if (sortByYearOfBirth) {
-                orders.add(criteriaBuilder.asc(root.get("yearOfBirth")));
+            if (sortByAuthor) {
+                orders.add(criteriaBuilder.asc(root.get("author")));
+            }
+            if (sortByYear) {
+                orders.add(criteriaBuilder.asc(root.get("year")));
             }
             // Применяем сортировку к запросу, если есть хотя бы одно условие
             if (!orders.isEmpty()) {

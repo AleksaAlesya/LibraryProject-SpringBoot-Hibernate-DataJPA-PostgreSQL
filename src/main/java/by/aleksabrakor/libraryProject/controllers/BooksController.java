@@ -3,15 +3,20 @@ package by.aleksabrakor.libraryProject.controllers;
 
 import by.aleksabrakor.libraryProject.models.Book;
 import by.aleksabrakor.libraryProject.models.Person;
+import by.aleksabrakor.libraryProject.pagination.PaginationData;
 import by.aleksabrakor.libraryProject.services.BooksService;
 import by.aleksabrakor.libraryProject.services.PeopleService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import static by.aleksabrakor.libraryProject.pagination.PaginationData.createPaginationData;
+import static by.aleksabrakor.libraryProject.util.UrlUtils.formingBaseUrlForBooks;
 
 @Controller
 @RequestMapping("/books")
@@ -32,20 +37,35 @@ public class BooksController implements ControllerI<Book> {
     //http://localhost:8080/books?sort_by_year=true
     //http://localhost:8080/books?page=0&books_per_page=3
     //http://localhost:8080/books?page=1&books_per_page=3&sort_by_year=true
+
     @GetMapping()
     public String index(Model model,
+                        @RequestParam(value = "sort_by_title", required = false) boolean sortByTitle,
+                        @RequestParam(value = "sort_by_author", required = false) boolean sortByAuthor,
                         @RequestParam(value = "sort_by_year", required = false) boolean sortByYear,
-                        @RequestParam(value = "page", required = false) Integer page,
-                        @RequestParam(value = "books_per_page", required = false) Integer booksPerPage) {
-        if (page == null || booksPerPage == null) {
-            model.addAttribute("books", booksService.findAll(sortByYear)); //выдача всех книг
-        } else {
-            if (page<1){
-                page = 1;
-                //что бы не могли указать отрицательное значение
-            }
-            model.addAttribute("books", booksService.findWithPagination(page, booksPerPage, sortByYear));
+                        @RequestParam(value = "page",  required = false, defaultValue = "1") int page,
+                        @RequestParam(value = "books_per_page", required = false, defaultValue = "30") int booksPerPage) {
+        // Защита от некорректных значений
+        if (page < 1 ) {
+            page = 1;
         }
+        if (booksPerPage < 1) {
+            booksPerPage = 30;
+        }
+        //Сортируем и Получаем данные с пагинацией
+        Page<Book> booksPage = booksService.findWithPagination(page, booksPerPage, sortByTitle, sortByAuthor, sortByYear );
+
+        // Формируем базовый URL
+        String baseUrl = formingBaseUrlForBooks(sortByTitle, sortByAuthor, sortByYear, booksPerPage);
+
+        // Проверяем, если page больше общего количества страниц, перенаправляем на последнюю страницу
+        if (page > booksPage.getTotalPages()) {
+            return "redirect:" + baseUrl + "&page=" + booksPage.getTotalPages();
+        }
+
+        // Вычисляем диапазон страниц для пагинации
+        PaginationData<Book> bookPaginationData = createPaginationData(booksPage,page,baseUrl);
+        model.addAttribute("paginationData", bookPaginationData);
         return "books/index";
     }
 

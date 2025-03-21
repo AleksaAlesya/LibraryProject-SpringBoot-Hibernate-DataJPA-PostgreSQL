@@ -10,40 +10,94 @@
 <!-- Форма для фильтров и пагинации -->
 <form action="/books" method="get">
     <label>
-        Сортировать по году:
+        Сортировать по названию:
+        <input type="checkbox" name="sort_by_title" th:checked="${param.sort_by_title != null}">
+    </label>
+    <br/>
+    <label>
+        Сортировать по автору:
+        <input type="checkbox" name="sort_by_author" th:checked="${param.sort_by_author != null}">
+    </label>
+    <br/>
+    <label>
+        Сортировать по году издания:
         <input type="checkbox" name="sort_by_year" th:checked="${param.sort_by_year != null}">
     </label>
     <br/>
     <label>
         Страница:
-        <input type="number" name="page" min="1" th:value="${param.page != null} ? ${param.page} : 1">
+        <input type="number" name="page" min="1"
+               th:value="${param.page != null} ? ${param.page} : 1"
+        >
     </label>
     <br/>
     <label>
         Книг на странице:
-        <input type="number" name="books_per_page" min="1" th:value="${param.books_per_page != null} ? ${param.books_per_page} : 10">
+        <input type="number" name="books_per_page" min="1"
+               th:value="${param.books_per_page != null} ? ${param.books_per_page} : 30"
+        >
     </label>
     <br/>
     <button type="submit">Применить</button>
 </form>
 <br/>
 
-<!--<br/>-->
-<!--<a href="/books/search">Поиск книги по названию </a>-->
-<!--<br/>-->
-<!-- Форма поиска -->
+<!-- Форма для поиска по названию -->
 <form th:method="POST" th:action="@{/books/search}">
     <label for="title_start_with">Найти книгу по названию:</label>
     <input type="text" id="title_start_with" name="title_start_with" placeholder="Введите название книги" required>
     <button type="submit">Найти</button>
 </form>
+<br/>
 
-<hr/>
+<!-- Таблица со списком книг -->
+<table border="1">
+    <thead>
+    <tr>
+        <th>Название книги</th>
+        <th>Автор</th>
+        <th>Год издания</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="books : ${paginationData.items}">
+        <td>
+            <a th:href="@{/books/{id}(id=${books.getId()})}"
+               th:text="${books.getTitle()}">book</a>
+        </td>
+        <td th:text="${books.getAuthor()}"></td>
+        <td th:text="${books.getYear()}"></td>
+    </tr>
+    </tbody>
+</table>
 
-<div th:each="book : ${books}">
-    <a th:href="@{/books/{id}(id=${book.getId()})}"
-       th:text="${book.getTitle()+', '+ book.getAuthor()+', '+book.getYear()}"> книга</a>
+<div th:if="${paginationData.totalPages > 1}">
 
+    <!-- Ссылка на первую страницу -->
+    <a th:if="${paginationData.currentPage > 0}" th:href="${paginationData.baseUrl + '&page=1'}">First</a>
+
+    <!-- Кнопка Previous -->
+    <a th:if="${paginationData.currentPage > 0}"
+       th:href="@{${paginationData.baseUrl} + '&page=' + ${paginationData.currentPage - 1}}"><<<</a>
+
+    <!-- Eсли диапазон страниц начинается не с первой -->
+    <span th:if="${paginationData.startPage > 2}">...</span>
+
+    <!-- Ссылки на страницы в диапазоне -->
+    <th:block th:each="i : ${#numbers.sequence(paginationData.startPage, paginationData.endPage)}">
+        <a th:if="${i != paginationData.currentPage}" th:href="${paginationData.baseUrl + '&page=' + i}"
+           th:text="${i}"></a>
+        <span th:if="${i == paginationData.currentPage}" th:text="${i}" style="font-weight: bold;"></span>
+    </th:block>
+
+    <!-- Многоточие, если диапазон страниц заканчивается не на последней -->
+    <span th:if="${paginationData.endPage < paginationData.totalPages - 1}">...</span>
+
+    <!-- Кнопка Next -->
+    <a th:if="${paginationData.currentPage < paginationData.totalPages}"
+       th:href="@{${paginationData.baseUrl} + '&page=' + ${paginationData.currentPage + 1}}"> >>></a>
+    <!-- Ссылка на последнюю страницу -->
+    <a th:href="@{${paginationData.baseUrl} + '&page=' + ${paginationData.totalPages}}">Last</a>
 </div>
 
 <br/>
