@@ -1,4 +1,4 @@
-package by.aleksabrakor.libraryProject.util;
+package by.aleksabrakor.libraryProject.aspect;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -13,8 +13,8 @@ public class LoggingAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
-//    Метод будет срабатывать перед выполнением всех методов из папки services (AOP)
-    @Before("execution(* by.aleksabrakor.libraryProject.services.*.*(..))") // все методы сервиса
+//    Метод будет срабатывать перед выполнением всех методов из папки (AOP)
+    @Before("execution(* by.aleksabrakor.libraryProject..*.*(..))") // все методы
     public void logServiceMethods(JoinPoint joinPoint) {
         String methodName = joinPoint.getSignature().getName();  // Получаем имя метода
         String className = joinPoint.getTarget().getClass().getSimpleName(); // Получаем имя класса

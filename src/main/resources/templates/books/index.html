@@ -57,6 +57,7 @@
         <th>Название книги</th>
         <th>Автор</th>
         <th>Год издания</th>
+        <th>У кого находится книга?</th>
     </tr>
     </thead>
     <tbody>
@@ -67,6 +68,13 @@
         </td>
         <td th:text="${books.getAuthor()}"></td>
         <td th:text="${books.getYear()}"></td>
+        <td th:if="${books.getOwner() != null}">
+            <a th:href="@{/people/{id}(id=${books.getOwner().getId()})}"
+
+             th:text="${books.getOwner().getFio()+', '+ books.getOwner().getYearOfBirth()}">user</a>
+        <td th:if="${books.getOwner() == null}">-
+        </td>
+
     </tr>
     </tbody>
 </table>
