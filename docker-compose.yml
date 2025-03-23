@@ -10,12 +10,14 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: library_db
+      POSTGRES_DB: library_db_d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 1s
       retries: 5
+    volumes:
+      - /data/postgres:/var/lib/postgresql/data #сохранение данных
 
   app:
     image: library_app
