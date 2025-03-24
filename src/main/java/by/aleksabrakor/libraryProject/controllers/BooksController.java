@@ -58,13 +58,9 @@ public class BooksController implements ControllerI<Book> {
         // Формируем базовый URL
         String baseUrl = formingBaseUrlForBooks(sortByTitle, sortByAuthor, sortByYear, booksPerPage);
 
-        // Проверяем, если page больше общего количества страниц, перенаправляем на последнюю страницу
-        if (page > booksPage.getTotalPages()) {
-            return "redirect:" + baseUrl + "&page=" + booksPage.getTotalPages();
-        }
-
         // Вычисляем диапазон страниц для пагинации
-        PaginationData<Book> bookPaginationData = createPaginationData(booksPage,page,baseUrl);
+        PaginationData<Book> bookPaginationData = createPaginationData(booksPage, page, baseUrl);
+//         Если список пуст -  передаем пустой список и 1 страницу
         model.addAttribute("paginationData", bookPaginationData);
         return "books/index";
     }

@@ -82,13 +82,13 @@
         <input type="checkbox" name="sort_by_yearOfBirth" th:checked="${param.sort_by_yearOfBirth != null}">
     </label>
     <br/>
-    <label>
-        Страница:
-        <input type="number" name="page" min="1"
-               th:value="${param.page != null} ? ${param.page} : 1"
-        >
-    </label>
-    <br/>
+<!--    <label>-->
+<!--        Страница:-->
+<!--        <input type="number" name="page" min="1"-->
+<!--               th:value="${param.page != null} ? ${param.page} : 1"-->
+<!--        >-->
+<!--    </label>-->
+<!--    <br/>-->
     <label>
         Человек на странице:
         <input type="number" name="people_per_page" min="1"
@@ -119,6 +119,9 @@
     </tr>
     </thead>
     <tbody>
+    <tr th:if="${paginationData.items.isEmpty()}">
+        <td colspan="4" style="text-align: center;">Список читателей пуст</td>
+    </tr>
     <tr th:each="person : ${paginationData.items}">
         <td>
         <a th:href="@{/people/{id}(id=${person.getId()})}"

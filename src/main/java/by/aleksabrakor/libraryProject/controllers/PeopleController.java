@@ -53,11 +53,6 @@ public class PeopleController implements ControllerI<Person> {
         // Формируем базовый URL
         String baseUrl = formingBaseUrlForPeople(sortByFio,sortByYearOfBirth,peoplePerPage);
 
-        // Проверяем, если page больше общего количества страниц, перенаправляем на последнюю страницу
-        if (page > peoplePage.getTotalPages()) {
-            return "redirect:" + baseUrl + "&page=" + peoplePage.getTotalPages();
-        }
-
         // Вычисляем диапазон страниц для пагинации
         PaginationData<Person> personPaginationData = createPaginationData(peoplePage,page,baseUrl);
 
