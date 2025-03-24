@@ -24,12 +24,12 @@ public class BookCheckScheduler {
         this.emailNotificationService = emailNotificationService;
     }
 
+    //каждую минуту будет срабатывать, использовать для проверки работы (cron = "0 * * * * ?")
 
-    // Запуск задачи каждый день в 09:00
     // Метод для ежедневной проверки просроченных книг
     @Transactional
-    //каждую минуту будет срабатывать, использовать для проверки работы (cron = "0 * * * * ?")
-    @Scheduled(cron = "0 0 9 * * ?")
+//    @Scheduled(cron = "0 0 9 * * ?")  // Запуск задачи каждый день в 09:00
+    @Scheduled(cron = "0 0 9 * * MON")   //М. будет срабатывать каждый понедельник в 9.00
     public void checkForExpiredBooks() {
         log.info("Запуск проверки просроченных книг...");
         List<Person> people = peopleService.findAll();

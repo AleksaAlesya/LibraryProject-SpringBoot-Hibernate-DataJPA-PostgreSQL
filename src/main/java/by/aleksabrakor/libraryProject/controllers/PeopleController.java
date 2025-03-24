@@ -48,13 +48,13 @@ public class PeopleController implements ControllerI<Person> {
         }
 
         //Сортируем и Получаем данные с пагинацией
-        Page<Person> peoplePage = peopleService.findWithPagination(page, peoplePerPage, sortByFio,sortByYearOfBirth);
+        Page<Person> peoplePage = peopleService.findWithPagination(page, peoplePerPage, sortByFio, sortByYearOfBirth);
 
         // Формируем базовый URL
-        String baseUrl = formingBaseUrlForPeople(sortByFio,sortByYearOfBirth,peoplePerPage);
+        String baseUrl = formingBaseUrlForPeople(sortByFio, sortByYearOfBirth, peoplePerPage);
 
         // Вычисляем диапазон страниц для пагинации
-        PaginationData<Person> personPaginationData = createPaginationData(peoplePage,page,baseUrl);
+        PaginationData<Person> personPaginationData = createPaginationData(peoplePage, page, baseUrl);
 
         model.addAttribute("paginationData", personPaginationData);
         return "people/index";

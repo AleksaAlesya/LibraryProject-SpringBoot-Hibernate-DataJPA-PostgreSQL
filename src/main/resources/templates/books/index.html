@@ -5,7 +5,7 @@
     <title>Страница со списком всех книг</title>
 </head>
 <body>
-<h1>Страница со списком всех книг</h1>
+<h1>Список всех книг</h1>
 
 <!-- Форма для фильтров и пагинации -->
 <form action="/books" method="get">
@@ -24,13 +24,13 @@
         <input type="checkbox" name="sort_by_year" th:checked="${param.sort_by_year != null}">
     </label>
     <br/>
-<!--    <label>-->
-<!--        Страница:-->
-<!--        <input type="number" name="page" min="1"-->
-<!--               th:value="${param.page != null} ? ${param.page} : 1"-->
-<!--        >-->
-<!--    </label>-->
-<!--    <br/>-->
+    <!--    <label>-->
+    <!--        Страница:-->
+    <!--        <input type="number" name="page" min="1"-->
+    <!--               th:value="${param.page != null} ? ${param.page} : 1"-->
+    <!--        >-->
+    <!--    </label>-->
+    <!--    <br/>-->
     <label>
         Книг на странице:
         <input type="number" name="books_per_page" min="1"
@@ -74,7 +74,7 @@
         <td th:if="${books.getOwner() != null}">
             <a th:href="@{/people/{id}(id=${books.getOwner().getId()})}"
 
-             th:text="${books.getOwner().getFio()+', '+ books.getOwner().getYearOfBirth()}">user</a>
+               th:text="${books.getOwner().getFio()+', '+ books.getOwner().getYearOfBirth()}">user</a>
         <td th:if="${books.getOwner() == null}">-</td>
 
     </tr>
@@ -106,6 +106,7 @@
     <!-- Кнопка Next -->
     <a th:if="${paginationData.currentPage < paginationData.totalPages}"
        th:href="@{${paginationData.baseUrl} + '&page=' + ${paginationData.currentPage + 1}}"> >>></a>
+
     <!-- Ссылка на последнюю страницу -->
     <a th:href="@{${paginationData.baseUrl} + '&page=' + ${paginationData.totalPages}}">Last</a>
 </div>
