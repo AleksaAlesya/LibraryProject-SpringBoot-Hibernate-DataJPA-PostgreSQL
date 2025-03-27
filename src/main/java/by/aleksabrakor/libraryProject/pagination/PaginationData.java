@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 @Data
 @AllArgsConstructor
-public class PaginationData<T>{
+public class PaginationData<T> {
     private List<T> items; // Список элементов на текущей странице
     private int currentPage; // Текущая страница
     private int totalPages; // Общее количество страниц

@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BooksRepository extends JpaRepository <Book,Integer> , JpaSpecificationExecutor<Book> {
+public interface BooksRepository extends JpaRepository<Book, Integer>, JpaSpecificationExecutor<Book> {
     List<Book> findByTitleStartingWithIgnoreCase(String titleStartWith);
 }

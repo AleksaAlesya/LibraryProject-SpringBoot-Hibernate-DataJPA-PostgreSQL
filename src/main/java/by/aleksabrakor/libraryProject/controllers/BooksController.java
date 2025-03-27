@@ -61,7 +61,6 @@ public class BooksController implements ControllerI<Book> {
 
         // Вычисляем диапазон страниц для пагинации
         PaginationData<Book> bookPaginationData = createPaginationData(booksPage, page, baseUrl);
-//         Если список пуст -  передаем пустой список и 1 страницу
         model.addAttribute("paginationData", bookPaginationData);
         return "books/index";
     }

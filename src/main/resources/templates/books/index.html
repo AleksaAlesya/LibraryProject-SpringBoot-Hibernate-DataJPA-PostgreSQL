@@ -5,7 +5,7 @@
     <title>Страница со списком всех книг</title>
 </head>
 <body>
-<h1>Страница со списком всех книг</h1>
+<h1>Список всех книг</h1>
 
 <!-- Форма для фильтров и пагинации -->
 <form action="/books" method="get">
@@ -81,7 +81,7 @@
         <td th:if="${books.getOwner() != null}">
             <a th:href="@{/people/{id}(id=${books.getOwner().getId()})}"
 
-             th:text="${books.getOwner().getFio()+', '+ books.getOwner().getYearOfBirth()}">user</a>
+               th:text="${books.getOwner().getFio()+', '+ books.getOwner().getYearOfBirth()}">user</a>
         <td th:if="${books.getOwner() == null}">-</td>
 
     </tr>

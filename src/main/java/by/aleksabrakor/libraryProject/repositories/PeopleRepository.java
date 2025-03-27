@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PeopleRepository extends JpaRepository <Person, Integer> , JpaSpecificationExecutor<Person> {
+public interface PeopleRepository extends JpaRepository<Person, Integer>, JpaSpecificationExecutor<Person> {
     Optional<Person> findByFioAndIdNot(String fio, int id);
 
     Person findPersonByBooksId(int id);
