@@ -24,9 +24,12 @@ public class BooksService {
         this.booksRepository = booksRepository;
     }
 
-    public Page<Book> findWithPagination(int page, int itemsPerPage, boolean sortByTitle, boolean sortByAuthor, boolean sortByYear) {
+    public Page<Book> findWithPagination(int page, int itemsPerPage, boolean sortByTitle, boolean sortByAuthor, boolean sortByYear, String titlePart) {
         // Создаем спецификацию с сортировкой
         Specification<Book> spec = BooksSpecification.sortByParameters(sortByTitle, sortByAuthor, sortByYear);
+        if (titlePart != null && !titlePart.trim().isEmpty()){
+            spec = spec.and(BooksSpecification.titlelike(titlePart));
+        }
 
         // Выполняем запрос с пагинацией, учитываем, что начало с 0 индекса
         return booksRepository.findAll(spec, PageRequest.of(page - 1, itemsPerPage));

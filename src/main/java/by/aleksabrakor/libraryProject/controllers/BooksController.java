@@ -43,6 +43,7 @@ public class BooksController implements ControllerI<Book> {
                         @RequestParam(value = "sort_by_title", required = false) boolean sortByTitle,
                         @RequestParam(value = "sort_by_author", required = false) boolean sortByAuthor,
                         @RequestParam(value = "sort_by_year", required = false) boolean sortByYear,
+                        @RequestParam(value = "title_part", required = false) String titlePart,
                         @RequestParam(value = "page",  required = false, defaultValue = "1") int page,
                         @RequestParam(value = "books_per_page", required = false, defaultValue = "30") int booksPerPage) {
         // Защита от некорректных значений
@@ -53,7 +54,7 @@ public class BooksController implements ControllerI<Book> {
             booksPerPage = 30;
         }
         //Сортируем и Получаем данные с пагинацией
-        Page<Book> booksPage = booksService.findWithPagination(page, booksPerPage, sortByTitle, sortByAuthor, sortByYear );
+        Page<Book> booksPage = booksService.findWithPagination(page, booksPerPage, sortByTitle, sortByAuthor, sortByYear, titlePart);
 
         // Формируем базовый URL
         String baseUrl = formingBaseUrlForBooks(sortByTitle, sortByAuthor, sortByYear, booksPerPage);

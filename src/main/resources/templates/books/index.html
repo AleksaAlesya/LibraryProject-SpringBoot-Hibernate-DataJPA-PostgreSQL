@@ -24,6 +24,13 @@
         <input type="checkbox" name="sort_by_year" th:checked="${param.sort_by_year != null}">
     </label>
     <br/>
+    <label>
+        Фильтр по части названия:
+        <input type="text" name="title_part" placeholder="Введите название книги"
+               th:value="${param.title_part} ? ${param.title_part} : ''">
+    </label>
+    <br/>
+
 <!--    <label>-->
 <!--        Страница:-->
 <!--        <input type="number" name="page" min="1"-->

@@ -82,13 +82,19 @@
         <input type="checkbox" name="sort_by_yearOfBirth" th:checked="${param.sort_by_yearOfBirth != null}">
     </label>
     <br/>
-<!--    <label>-->
-<!--        Страница:-->
-<!--        <input type="number" name="page" min="1"-->
-<!--               th:value="${param.page != null} ? ${param.page} : 1"-->
-<!--        >-->
-<!--    </label>-->
-<!--    <br/>-->
+    <label>
+        Фильтр по части ФИО:
+        <input type="text" name="fio_part" placeholder="Введите часть ФИО"
+               th:value="${param.fio_part} ? ${param.fio_part} : ''">
+    </label>
+    <br/>
+    <!--    <label>-->
+    <!--        Страница:-->
+    <!--        <input type="number" name="page" min="1"-->
+    <!--               th:value="${param.page != null} ? ${param.page} : 1"-->
+    <!--        >-->
+    <!--    </label>-->
+    <!--    <br/>-->
     <label>
         Человек на странице:
         <input type="number" name="people_per_page" min="1"
@@ -124,8 +130,8 @@
     </tr>
     <tr th:each="person : ${paginationData.items}">
         <td>
-        <a th:href="@{/people/{id}(id=${person.getId()})}"
-           th:text="${person.getFio()}">user</a>
+            <a th:href="@{/people/{id}(id=${person.getId()})}"
+               th:text="${person.getFio()}">user</a>
         </td>
         <td th:text="${person.yearOfBirth}"></td>
         <td th:text="${person.numberPhone}"></td>
@@ -140,14 +146,16 @@
     <a th:if="${paginationData.currentPage > 0}" th:href="${paginationData.baseUrl + '&page=1'}">First</a>
 
     <!-- Кнопка Previous -->
-    <a th:if="${paginationData.currentPage > 0}" th:href="@{${paginationData.baseUrl} + '&page=' + ${paginationData.currentPage - 1}}"><<<</a>
+    <a th:if="${paginationData.currentPage > 0}"
+       th:href="@{${paginationData.baseUrl} + '&page=' + ${paginationData.currentPage - 1}}"><<<</a>
 
     <!-- Eсли диапазон страниц начинается не с первой -->
     <span th:if="${paginationData.startPage > 2}">...</span>
 
     <!-- Ссылки на страницы в диапазоне -->
     <th:block th:each="i : ${#numbers.sequence(paginationData.startPage, paginationData.endPage)}">
-        <a th:if="${i != paginationData.currentPage}" th:href="${paginationData.baseUrl + '&page=' + i}" th:text="${i}"></a>
+        <a th:if="${i != paginationData.currentPage}" th:href="${paginationData.baseUrl + '&page=' + i}"
+           th:text="${i}"></a>
         <span th:if="${i == paginationData.currentPage}" th:text="${i}" style="font-weight: bold;"></span>
     </th:block>
 
@@ -155,7 +163,8 @@
     <span th:if="${paginationData.endPage < paginationData.totalPages - 1}">...</span>
 
     <!-- Кнопка Next -->
-    <a th:if="${paginationData.currentPage < paginationData.totalPages}"  th:href="@{${paginationData.baseUrl} + '&page=' + ${paginationData.currentPage + 1}}"> >>></a>
+    <a th:if="${paginationData.currentPage < paginationData.totalPages}"
+       th:href="@{${paginationData.baseUrl} + '&page=' + ${paginationData.currentPage + 1}}"> >>></a>
     <!-- Ссылка на последнюю страницу -->
     <a th:href="@{${paginationData.baseUrl} + '&page=' + ${paginationData.totalPages}}">Last</a>
 </div>

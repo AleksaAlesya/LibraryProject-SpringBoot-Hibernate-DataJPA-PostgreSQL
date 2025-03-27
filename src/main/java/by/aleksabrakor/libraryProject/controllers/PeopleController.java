@@ -36,6 +36,7 @@ public class PeopleController implements ControllerI<Person> {
     public String index(Model model,
                         @RequestParam(value = "sort_by_fio", required = false) boolean sortByFio,
                         @RequestParam(value = "sort_by_yearOfBirth", required = false) boolean sortByYearOfBirth,
+                        @RequestParam(value = "fio_part", required = false) String fioPart,
                         @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                         @RequestParam(value = "people_per_page", required = false, defaultValue = "30") int peoplePerPage) {
 
@@ -48,7 +49,7 @@ public class PeopleController implements ControllerI<Person> {
         }
 
         //Сортируем и Получаем данные с пагинацией
-        Page<Person> peoplePage = peopleService.findWithPagination(page, peoplePerPage, sortByFio,sortByYearOfBirth);
+        Page<Person> peoplePage = peopleService.findWithPagination(page, peoplePerPage, sortByFio,sortByYearOfBirth, fioPart);
 
         // Формируем базовый URL
         String baseUrl = formingBaseUrlForPeople(sortByFio,sortByYearOfBirth,peoplePerPage);

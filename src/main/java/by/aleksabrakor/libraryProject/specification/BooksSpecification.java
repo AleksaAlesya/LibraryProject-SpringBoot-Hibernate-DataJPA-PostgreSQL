@@ -30,4 +30,14 @@ public class BooksSpecification {
             return null;
         };
     }
+
+    //фильтрация по части в названия
+    public static Specification<Book> titlelike(String titlePart) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("title")), // Приводим поле к нижнему регистру
+                        String.format("%%%s%%", titlePart.toLowerCase()) // Приводим значение поиска к нижнему регистру
+                );
+    }
 }
+

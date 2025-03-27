@@ -1,5 +1,6 @@
 package by.aleksabrakor.libraryProject.specification;
 
+import by.aleksabrakor.libraryProject.models.Book;
 import by.aleksabrakor.libraryProject.models.Person;
 import jakarta.persistence.criteria.Order;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,5 +27,14 @@ public class PeopleSpecification {
             // Возвращаем null, так как это спецификация для сортировки, а не для фильтрации
             return null;
         };
+    }
+
+    //фильтрация по части в названия
+    public static Specification<Person> fioLike(String fioPart) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("fio")), // Приводим поле к нижнему регистру
+                        String.format("%%%s%%", fioPart.toLowerCase()) // Приводим значение поиска к нижнему регистру
+                );
     }
 }

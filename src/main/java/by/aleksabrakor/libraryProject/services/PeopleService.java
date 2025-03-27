@@ -3,6 +3,7 @@ package by.aleksabrakor.libraryProject.services;
 import by.aleksabrakor.libraryProject.models.Book;
 import by.aleksabrakor.libraryProject.models.Person;
 import by.aleksabrakor.libraryProject.repositories.PeopleRepository;
+import by.aleksabrakor.libraryProject.specification.BooksSpecification;
 import by.aleksabrakor.libraryProject.specification.PeopleSpecification;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,13 @@ public class PeopleService {
         this.peopleRepository = peopleRepository;
     }
 
-    public Page<Person> findWithPagination(int page, int itemsPerPage, boolean sortByFio,boolean sortByYearOfBirth) {
+    public Page<Person> findWithPagination(int page, int itemsPerPage, boolean sortByFio,boolean sortByYearOfBirth, String fioPart) {
         // Создаем спецификацию с сортировкой
         Specification<Person> spec = PeopleSpecification.sortByParameter(sortByFio,sortByYearOfBirth);
+
+        if (fioPart != null && !fioPart.trim().isEmpty()){
+            spec = spec.and(PeopleSpecification.fioLike(fioPart));
+        }
 
         // Выполняем запрос с пагинацией, учитываем, что начало с 0 индекса
         return peopleRepository.findAll(spec, PageRequest.of(page - 1, itemsPerPage));
